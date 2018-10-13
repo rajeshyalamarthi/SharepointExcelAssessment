@@ -45,7 +45,7 @@ namespace AssessmentExcel
             private static void epplus(ClientContext clientContext)
             {
 
-                File file = clientContext.Web.GetFileByUrl("https://acuvatehyd.sharepoint.com/:x:/t/Info/EfTYpGcAMH9Gmho9Cna6Vv0BiH0AJ1VOurNrepDBVGDiFg?e=Sx9jjc");
+            Microsoft.SharePoint.Client.File file = clientContext.Web.GetFileByUrl("https://acuvatehyd.sharepoint.com/:x:/t/Info/EfTYpGcAMH9Gmho9Cna6Vv0BiH0AJ1VOurNrepDBVGDiFg?e=Sx9jjc");
                 ClientResult<System.IO.Stream> data = file.OpenBinaryStream();
                 clientContext.Load(file);
                 clientContext.ExecuteQuery();
@@ -90,7 +90,7 @@ namespace AssessmentExcel
                                 var filecreationinfo = new FileCreationInformation();
                                 filecreationinfo.Content = System.IO.File.ReadAllBytes(filetoupload);
                                 filecreationinfo.Url = Path.Combine("UploadedDocument/", Path.GetFileName(filetoupload));
-                                File files = documentlibrary.RootFolder.Files.Add(filecreationinfo);
+                                Microsoft.SharePoint.Client.File files = documentlibrary.RootFolder.Files.Add(filecreationinfo);
                                 clientContext.Load(files);
                                 clientContext.ExecuteQuery();
                                 Console.WriteLine("FileUploaded");
