@@ -74,58 +74,115 @@ namespace AssessmentExcel
                             }
                             var startRow = hasHeader ? 2 : 1;
                         //Console.WriteLine(startRow);
-                            for (var rowNum = startRow; rowNum <= ws.Dimension.End.Row; rowNum++)
-                            {
+                        for (var rowNum = startRow; rowNum <= ws.Dimension.End.Row; rowNum++)
+                        {
                             var wsRow = ws.Cells[rowNum, 1, rowNum, ws.Dimension.End.Column];
 
                             //for(int i = 2; i <= 11; i++)
                             //{
-                                int j = 1;
-                                {
-                                    string filetoupload=wsRow[rowNum,j].Text;
+                            int j = 1;
 
+                            string filetoupload = wsRow[rowNum, j].Text;
+
+                            int split = filetoupload.LastIndexOf('.');
+                            string lhs = split < 0 ? filetoupload : filetoupload.Substring(0, split);
+                            string rhs = split < 0 ? "" : filetoupload.Substring(split + 1);
+
+
+                            //Console.WriteLine(lhs);
+                            //Console.WriteLine(rhs);
+
+                            System.IO.FileInfo filesize = new System.IO.FileInfo(filetoupload);
+                            long size = filesize.Length;
+                            //    Console.WriteLine("Sizes are:" +size);
+
+
+
+
+
+
+                            string deptfilebelongs = wsRow[rowNum, 4].Text;
+
+                            Console.WriteLine(deptfilebelongs);
+
+
+                            if (size >= 1000 && size <= 20000)
+                            {
                                 //string sharePointSite = "https://acuvatehyd.sharepoint.com/teams/Info/UploadedDocument";
                                 // string DocumentLibraryName = "UploadedDocument";
                                 List documentlibrary = clientContext.Web.Lists.GetByTitle("UploadedDocument");
+
+
+                                //clientContext.Load(listItem);
+                                //clientContext.ExecuteQuery();
+
+
+
+
+
+
+
                                 var filecreationinfo = new FileCreationInformation();
                                 filecreationinfo.Content = System.IO.File.ReadAllBytes(filetoupload);
                                 filecreationinfo.Overwrite = true;
                                 filecreationinfo.Url = Path.Combine("UploadedDocument/", Path.GetFileName(filetoupload));
+
                                 Microsoft.SharePoint.Client.File files = documentlibrary.RootFolder.Files.Add(filecreationinfo);
+                                ListItem listItem = files.ListItemAllFields;
+                                listItem["Dept"] = deptfilebelongs;
+                                listItem["FileType"] = rhs;
+                                listItem.Update();
+
+                                //ListItemCreationInformation listitemcreateinfo = new ListItemCreationInformation();
+                                //ListItem listItem = documentlibrary.AddItem(listitemcreateinfo);
+                                //listItem["Dept"] = deptfilebelongs;
+                                ////listItem["Filetype"] = rhs;
+
+
+                                //listItem.Update();
+
+
+
+
                                 clientContext.Load(files);
                                 clientContext.ExecuteQuery();
                                 Console.WriteLine("FileUploaded");
+                                //Console.WriteLine("listitemadded");
 
 
 
 
+
+
+
+
+
+                                //var row = tbl.NewRow();
+                                ////Console.WriteLine(row);
+
+
+                                //foreach (var cell in wsRow)
+
+                                //{
+
+                                //    if (null != cell.Hyperlink)
+                                //        row[cell.Start.Column - 1] = cell.Hyperlink;
+                                //    //     Console.WriteLine();
+                                //    else
+                                //        row[cell.Start.Column - 1] = cell.Text;
+
+
+                                //    //Console.WriteLine(cell.Text);
+
+                                //}
+                                //tbl.Rows.Add(row);
                             }
-                            
-
+                            else
+                            {
+                                Console.WriteLine("failed");
+                            }
+                        }
                           
-                                
-                                
-                                var row = tbl.NewRow();
-                            //Console.WriteLine(row);
-
-
-                                foreach (var cell in wsRow)
-
-                                {
-                               
-                                if (null != cell.Hyperlink)
-                                    row[cell.Start.Column - 1] = cell.Hyperlink;
-                                //     Console.WriteLine();
-                                else
-                                row[cell.Start.Column - 1] = cell.Text;
-
-
-                                //Console.WriteLine(cell.Text);
-
-                                }
-                                tbl.Rows.Add(row);
-                            }
-                            Console.WriteLine('1');
 
                         }
                     }
@@ -134,27 +191,13 @@ namespace AssessmentExcel
 
                 }
 
-                Console.WriteLine("Done");
+                //Console.WriteLine("Done");
                 Console.ReadKey();
 
             }
 
 
-
-//D:\AssessmentExcel\AssessmentExcel\files\uploadfile1.txt
-
-//D:\AssessmentExcel\AssessmentExcel\files\uploadfile2.txt
-//D:\AssessmentExcel\AssessmentExcel\files\uploadfile3.txt
-
-//D:\AssessmentExcel\AssessmentExcel\files\hello.jpg
-//D:\AssessmentExcel\AssessmentExcel\files\klu.jpg
-
-//D:\AssessmentExcel\AssessmentExcel\files\last.png
-//D:\AssessmentExcel\AssessmentExcel\files\testing.jpg
-
-//D:\AssessmentExcel\AssessmentExcel\files\testing3.jpg
-//            D:\AssessmentExcel\AssessmentExcel\files\testing4.jpg
-        //    private static void Readfile(ClientContext clientContext)
+     //    private static void Readfile(ClientContext clientContext)
         //    {
         //        string filename = "DataUploadforProject";
         //        bool isError = true;

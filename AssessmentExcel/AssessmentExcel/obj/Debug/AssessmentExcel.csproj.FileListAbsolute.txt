@@ -44,10 +44,6 @@ D:\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csproj.CoreCompileI
 D:\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csproj.CopyComplete
 D:\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.exe
 D:\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.pdb
-D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csprojAssemblyReference.cache
-D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csproj.CoreCompileInputs.cache
-D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.exe
-D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.pdb
 D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\bin\Debug\AssessmentExcel.exe.config
 D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\bin\Debug\AssessmentExcel.exe
 D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\bin\Debug\AssessmentExcel.pdb
@@ -88,4 +84,8 @@ D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\bin\Debug\System.Se
 D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\bin\Debug\DocumentFormat.OpenXml.xml
 D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\bin\Debug\EPPlus.xml
 D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csproj.CoreCompileInputs.cache
 D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csproj.CopyComplete
+D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.exe
+D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.pdb
+D:\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csprojAssemblyReference.cache
