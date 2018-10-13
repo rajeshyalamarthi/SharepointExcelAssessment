@@ -89,6 +89,7 @@ namespace AssessmentExcel
                                 List documentlibrary = clientContext.Web.Lists.GetByTitle("UploadedDocument");
                                 var filecreationinfo = new FileCreationInformation();
                                 filecreationinfo.Content = System.IO.File.ReadAllBytes(filetoupload);
+                                filecreationinfo.Overwrite = true;
                                 filecreationinfo.Url = Path.Combine("UploadedDocument/", Path.GetFileName(filetoupload));
                                 Microsoft.SharePoint.Client.File files = documentlibrary.RootFolder.Files.Add(filecreationinfo);
                                 clientContext.Load(files);
