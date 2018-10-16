@@ -41,29 +41,28 @@ namespace AssessmentExcel
             PathLocation pathLocation = new PathLocation();
 
             Microsoft.SharePoint.Client.File file = clientContext.Web.GetFileByUrl(pathLocation.ExcelPathLocation);
-            ClientResult<System.IO.Stream> data = file.OpenBinaryStream();
+            ClientResult<System.IO.Stream> ExcelData = file.OpenBinaryStream();
             clientContext.Load(file);
             clientContext.ExecuteQuery();
-            using (var pck = new OfficeOpenXml.ExcelPackage())
+            using (var package = new OfficeOpenXml.ExcelPackage())
             {
 
-                using (System.IO.MemoryStream mStream = new System.IO.MemoryStream())
+                using (System.IO.MemoryStream Memorystream = new System.IO.MemoryStream())
                 {
                     // to read the data of the online excel sheet
-                    if (data != null)
+                    if (ExcelData != null)
                     {
-                        data.Value.CopyTo(mStream);
-                        pck.Load(mStream);
-                        var WorkSheet = pck.Workbook.Worksheets.First();
+                        ExcelData.Value.CopyTo(Memorystream);
+                        package.Load(Memorystream);
+                        var WorkSheet = package.Workbook.Worksheets.First();
                         DataTable table1 = new DataTable();
-                        bool hasHeader = true;
+                        bool IsHeadingRowAvailable = true;
+
                         foreach (var firstRowCell in WorkSheet.Cells[1, 1, 1, WorkSheet.Dimension.End.Column])
                         {
-                            table1.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                            table1.Columns.Add(IsHeadingRowAvailable ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
 
                         }
-                        var startRow = hasHeader ? 2 : 1;
-
                         string FileUploadStatus;
                         string Reason = "";
 
@@ -78,7 +77,7 @@ namespace AssessmentExcel
                         ExcelWorkSheet = (Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
                         range = ExcelWorkSheet.UsedRange;
 
-
+                        var startRow = IsHeadingRowAvailable ? 2 : 1;// if Row Head Is available Then Row Starts From 2 else 1
                         for (var RowNumber = startRow; RowNumber <= WorkSheet.Dimension.End.Row; RowNumber++)
                         {
                             // getting the rows info which starts from 2
