@@ -18,18 +18,18 @@ namespace AssessmentExcel
     {
         public static void Main(string[] args)
         {
+            PathLocation pathLocation = new PathLocation();
             Console.WriteLine("Enter the Password");
             Credentials credentials = new Credentials();
 
-            using (ClientContext clientContext = new ClientContext("https://acuvatehyd.sharepoint.com/teams/Info"))
+            using (ClientContext clientContext = new ClientContext(pathLocation.SiteUrl))
             {
 
                 clientContext.Credentials = new SharePointOnlineCredentials(credentials.UserName, credentials.password);
-                //List readlist = clientContext.Web.Lists.GetByTitle("Documents");
 
-                Importexcel(clientContext);
-                ReadExcel(clientContext);
-                UploadExcel(clientContext);
+                Importexcel(clientContext);// method to download the excelfile
+                ReadExcel(clientContext);// method to read the excel file and upload the files to the Documentlibrary and also update the status and reason columns of the excel file which is downloaded
+                UploadExcel(clientContext);// method to upload the excel file which is updated
 
 
 
@@ -38,8 +38,9 @@ namespace AssessmentExcel
         }
         private static void ReadExcel(ClientContext clientContext)
         {
+            PathLocation pathLocation = new PathLocation();
 
-            Microsoft.SharePoint.Client.File file = clientContext.Web.GetFileByUrl("https://acuvatehyd.sharepoint.com/:x:/t/Info/EfTYpGcAMH9Gmho9Cna6Vv0BiH0AJ1VOurNrepDBVGDiFg?e=Sx9jjc");
+            Microsoft.SharePoint.Client.File file = clientContext.Web.GetFileByUrl(pathLocation.ExcelPathLocation);
             ClientResult<System.IO.Stream> data = file.OpenBinaryStream();
             clientContext.Load(file);
             clientContext.ExecuteQuery();
@@ -48,66 +49,62 @@ namespace AssessmentExcel
 
                 using (System.IO.MemoryStream mStream = new System.IO.MemoryStream())
                 {
+                    // to read the data of the online excel sheet
                     if (data != null)
                     {
                         data.Value.CopyTo(mStream);
                         pck.Load(mStream);
                         var ws = pck.Workbook.Worksheets.First();
                         DataTable tbl = new DataTable();
-                        bool hasHeader = true; // adjust it accordingly( i've mentioned that this is a simple approach)
+                        bool hasHeader = true;
                         foreach (var firstRowCell in ws.Cells[1, 1, 1, ws.Dimension.End.Column])
                         {
-                            var print = tbl.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
-                            Console.WriteLine(print);
+                            tbl.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+
                         }
                         var startRow = hasHeader ? 2 : 1;
-                        //Console.WriteLine(startRow);
+
                         string FileUploadStatus;
                         string Reason = "";
-                        Excel.Application excelapp;
-                        Excel.Workbook excelbook;
-                        Excel.Worksheet excelsheet;
+
+                        //to open the local excel file which was downloaded, Using Excel Service
+                        Excel.Application Excelapplication;
+                        Excel.Workbook ExcelWorkBook;
+                        Excel.Worksheet ExcelWorkSheet;
                         Excel.Range range;
-                        string ExcelFileName = "DataUploadforProject.xlsx";
-                        string ExcelFilePath = @"G:/";
-                        excelapp = new Excel.Application();
-                        var Excellocalpath = System.IO.Path.Combine(ExcelFilePath, ExcelFileName);
-                        excelbook = excelapp.Workbooks.Open(Excellocalpath);
-                        excelsheet = (Excel.Worksheet)excelbook.Worksheets.get_Item(1);
-                        range = excelsheet.UsedRange;
-                        //range.Cells[8, 5] = "Tesing";
+                        Excelapplication = new Excel.Application();
+                        var Excellocalpath = System.IO.Path.Combine(pathLocation.ExcelFilePath, pathLocation.ExcelFileName);
+                        ExcelWorkBook = Excelapplication.Workbooks.Open(Excellocalpath);
+                        ExcelWorkSheet = (Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
+                        range = ExcelWorkSheet.UsedRange;
+
 
                         for (var rowNum = startRow; rowNum <= ws.Dimension.End.Row; rowNum++)
                         {
+                            // getting the rows info which starts from 2
                             var wsRow = ws.Cells[rowNum, 1, rowNum, ws.Dimension.End.Column];
 
-                            //for(int i = 2; i <= 11; i++)
-                            //{
 
+                            // storing the data based on column number  of each row
+                            string filetoupload = wsRow[rowNum, 1].Text;//FilePath of File to Be Uploaded
 
-                            string filetoupload = wsRow[rowNum, 1].Text;
-                            //to get status
-                            string status = wsRow[rowNum, 2].Text;
-                            string[] values = status.Split(',');
-                            string CreatedBy = wsRow[rowNum, 3].Text;
-                            string deptfilebelongs = wsRow[rowNum, 4].Text;
-                            // to get filetype
-                            int split = filetoupload.LastIndexOf('.');
+                            string status = wsRow[rowNum, 2].Text;//To read The Status Of The File
+                            string[] values = status.Split(',');//Getting Multiple Status info Storing Seperately By splitting with ,
+
+                            string CreatedBy = wsRow[rowNum, 3].Text;//Getting info of the person who created the File
+
+                            string deptfilebelongs = wsRow[rowNum, 4].Text;//File Belongs To Particular Department
+                       
+                            int split = filetoupload.LastIndexOf('.');//To Get The Type Of the File
                             string filename = split < 0 ? filetoupload : filetoupload.Substring(0, split);
                             string type = split < 0 ? "" : filetoupload.Substring(split + 1);
-                            //filesize
-                            System.IO.FileInfo filesize = new System.IO.FileInfo(filetoupload);
+                            
+                            System.IO.FileInfo filesize = new System.IO.FileInfo(filetoupload);// Getting the Size of Each file
                             long size = filesize.Length;
-
-                            //--------------------------------*************************
-
-
-
-                            try
+                         try
                             {
-                                if (size >= 1000 && size <= 20000)
+                                if (size >= 1000 && size <= 20000)//uploading files based on the filesize(Bytes)
                                 {
-
                                     List documentlibrary = clientContext.Web.Lists.GetByTitle("UploadedDocument");
                                     var filecreationinfo = new FileCreationInformation();
                                     filecreationinfo.Content = System.IO.File.ReadAllBytes(filetoupload);
@@ -116,10 +113,10 @@ namespace AssessmentExcel
 
                                     Microsoft.SharePoint.Client.File files = documentlibrary.RootFolder.Files.Add(filecreationinfo);
                                     ListItem listItem = files.ListItemAllFields;
+                                    // updating the DocumentLibrary with Following Fields
                                     listItem["Dept"] = deptfilebelongs;
                                     listItem["FileType"] = type;
                                     listItem["Status"] = values;
-
                                     listItem.Update();
                                     clientContext.Load(files);
                                     clientContext.ExecuteQuery();
@@ -145,9 +142,10 @@ namespace AssessmentExcel
                             }
 
                         }
-                        excelbook.Save();
-                        excelbook.Close();
-                        excelapp.Quit();
+                        //closing the Local Excel File Which Was Updated.
+                        ExcelWorkBook.Save();
+                        ExcelWorkBook.Close();
+                        Excelapplication.Quit();
 
                     }
                 }
@@ -158,19 +156,15 @@ namespace AssessmentExcel
 
         }
 
-
-
-
         private static void Importexcel(ClientContext clientContext)
         {
 
-
-            var list = clientContext.Web.Lists.GetByTitle("ExcelDocument");
+            // downloading the excelfile For Updation
+            var list = clientContext.Web.Lists.GetByTitle("ExcelUploadDocument");
             var listitem = list.GetItemById(1);
             clientContext.Load(list);
             clientContext.Load(listitem, i => i.File);
             clientContext.ExecuteQuery();
-
             var fileref = listitem.File.ServerRelativeUrl;
             var fileinfo = Microsoft.SharePoint.Client.File.OpenBinaryDirect(clientContext, fileref);
             var filename = Path.Combine(@"G:\", (string)listitem.File.Name);
@@ -181,21 +175,21 @@ namespace AssessmentExcel
 
             Console.WriteLine("filedownloaded");
 
-
-
         }
+
 
         private static void UploadExcel(ClientContext clientContext)
         {
-            var newfile = @"G:/DataUploadforProject.xlsx";
+            // uploading the file which was Updated Succesfully
+            PathLocation pathLocation = new PathLocation();
             FileCreationInformation fileCreation = new FileCreationInformation
             {
-                Content = System.IO.File.ReadAllBytes(newfile),
+                Content = System.IO.File.ReadAllBytes(pathLocation.LocalExcelfile),
                 Overwrite = true,
-                Url = Path.Combine("ExcelDocument/", Path.GetFileName(newfile))
+                Url = Path.Combine("ExcelUploadDocument/", Path.GetFileName(pathLocation.LocalExcelfile))
 
             };
-           var list = clientContext.Web.Lists.GetByTitle("ExcelDocument");
+            var list = clientContext.Web.Lists.GetByTitle("ExcelUploadDocument");
             var uploadFile = list.RootFolder.Files.Add(fileCreation);
             clientContext.Load(uploadFile);
             clientContext.ExecuteQuery();
@@ -207,45 +201,6 @@ namespace AssessmentExcel
 
         }
 
-
-        //    private static void Readfile(ClientContext clientContext)
-        //    {
-        //        string filename = "DataUploadforProject";
-        //        bool isError = true;
-
-        //        const string docname = "Documents";
-
-        //        try
-        //        {
-        //            DataTable dataTable = new DataTable("Exceldatatable");
-        //            List list = clientContext.Web.Lists.GetByTitle("Documents");
-        //            clientContext.Load(list.RootFolder);
-
-        //            clientContext.ExecuteQuery();
-
-        //            string fileurl = list.RootFolder.ServerRelativeUrl + "/" + filename;
-        //            File file = clientContext.Web.GetFileByServerRelativeUrl(fileurl);
-        //            ClientResult<System.IO.Stream> data = file.OpenBinaryStream();
-        //            clientContext.Load(file);
-
-        //            clientContext.ExecuteQuery();
-        //            using (System.IO.MemoryStream mstream = new System.IO.MemoryStream())
-        //            {
-        //                if (data != null)
-        //                {
-        //                    data.Value.CopyTo(mstream);
-        //                    using (SpreadsheetDocument document = SpreadsheetDocument.Open(mstream, false))
-        //                    {
-        //                        WorkbookPart workbookPart = document.WorkbookPart;
-        //                        IEnumerable<Sheet> sheets = document.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
-
-
-        //                    }
-        //                }
-        //            }
-
-        //        }
-        //}
 
 
 

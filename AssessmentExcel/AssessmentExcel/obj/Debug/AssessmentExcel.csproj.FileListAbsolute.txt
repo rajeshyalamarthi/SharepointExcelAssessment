@@ -131,6 +131,7 @@ G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\bin
 G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\bin\Debug\DocumentFormat.OpenXml.xml
 G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\bin\Debug\EPPlus.xml
 G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csprojAssemblyReference.cache
 G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csproj.CoreCompileInputs.cache
 G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csproj.CopyComplete
 G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.exe
