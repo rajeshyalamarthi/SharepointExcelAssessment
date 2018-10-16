@@ -76,7 +76,7 @@ namespace AssessmentExcel
                         ExcelWorkBook = Excelapplication.Workbooks.Open(Excellocalpath);
                         ExcelWorkSheet = (Excel.Worksheet)ExcelWorkBook.Worksheets.get_Item(1);
                         range = ExcelWorkSheet.UsedRange;
-
+                         
                         var startRow = IsHeadingRowAvailable ? 2 : 1;// if Row Head Is available Then Row Starts From 2 else 1
                         for (var RowNumber = startRow; RowNumber <= WorkSheet.Dimension.End.Row; RowNumber++)
                         {
