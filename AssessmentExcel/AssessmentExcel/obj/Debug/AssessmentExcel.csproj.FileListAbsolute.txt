@@ -135,4 +135,3 @@ G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj
 G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csproj.CopyComplete
 G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.exe
 G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.pdb
-G:\ExcelAssessment\SharepointExcelAssessment\AssessmentExcel\AssessmentExcel\obj\Debug\AssessmentExcel.csprojAssemblyReference.cache

@@ -29,7 +29,9 @@ namespace AssessmentExcel
 
                 Importexcel(clientContext);
                 ReadExcel(clientContext);
-             
+                UploadExcel(clientContext);
+
+
 
             }
 
@@ -163,7 +165,7 @@ namespace AssessmentExcel
         {
 
 
-            var list = clientContext.Web.Lists.GetByTitle("Documents");
+            var list = clientContext.Web.Lists.GetByTitle("ExcelDocument");
             var listitem = list.GetItemById(1);
             clientContext.Load(list);
             clientContext.Load(listitem, i => i.File);
@@ -179,7 +181,28 @@ namespace AssessmentExcel
 
             Console.WriteLine("filedownloaded");
 
+
+
+        }
+
+        private static void UploadExcel(ClientContext clientContext)
+        {
+            var newfile = @"G:/DataUploadforProject.xlsx";
+            FileCreationInformation fileCreation = new FileCreationInformation
+            {
+                Content = System.IO.File.ReadAllBytes(newfile),
+                Overwrite = true,
+                Url = Path.Combine("ExcelDocument/", Path.GetFileName(newfile))
+
+            };
+           var list = clientContext.Web.Lists.GetByTitle("ExcelDocument");
+            var uploadFile = list.RootFolder.Files.Add(fileCreation);
+            clientContext.Load(uploadFile);
+            clientContext.ExecuteQuery();
+            Console.WriteLine("Uploaded Successfully");
             Console.ReadKey();
+
+
 
 
         }
