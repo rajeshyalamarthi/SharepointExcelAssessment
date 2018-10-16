@@ -54,12 +54,12 @@ namespace AssessmentExcel
                     {
                         data.Value.CopyTo(mStream);
                         pck.Load(mStream);
-                        var ws = pck.Workbook.Worksheets.First();
-                        DataTable tbl = new DataTable();
+                        var WorkSheet = pck.Workbook.Worksheets.First();
+                        DataTable table1 = new DataTable();
                         bool hasHeader = true;
-                        foreach (var firstRowCell in ws.Cells[1, 1, 1, ws.Dimension.End.Column])
+                        foreach (var firstRowCell in WorkSheet.Cells[1, 1, 1, WorkSheet.Dimension.End.Column])
                         {
-                            tbl.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
+                            table1.Columns.Add(hasHeader ? firstRowCell.Text : string.Format("Column {0}", firstRowCell.Start.Column));
 
                         }
                         var startRow = hasHeader ? 2 : 1;
@@ -79,21 +79,21 @@ namespace AssessmentExcel
                         range = ExcelWorkSheet.UsedRange;
 
 
-                        for (var rowNum = startRow; rowNum <= ws.Dimension.End.Row; rowNum++)
+                        for (var RowNumber = startRow; RowNumber <= WorkSheet.Dimension.End.Row; RowNumber++)
                         {
                             // getting the rows info which starts from 2
-                            var wsRow = ws.Cells[rowNum, 1, rowNum, ws.Dimension.End.Column];
+                            var WorkSheetRow = WorkSheet.Cells[RowNumber, 1, RowNumber, WorkSheet.Dimension.End.Column];
 
 
                             // storing the data based on column number  of each row
-                            string filetoupload = wsRow[rowNum, 1].Text;//FilePath of File to Be Uploaded
+                            string filetoupload = WorkSheetRow[RowNumber, 1].Text;//FilePath of File to Be Uploaded
 
-                            string status = wsRow[rowNum, 2].Text;//To read The Status Of The File
+                            string status = WorkSheetRow[RowNumber, 2].Text;//To read The Status Of The File
                             string[] values = status.Split(',');//Getting Multiple Status info Storing Seperately By splitting with ,
 
-                            string CreatedBy = wsRow[rowNum, 3].Text;//Getting info of the person who created the File
+                            string CreatedBy = WorkSheetRow[RowNumber, 3].Text;//Getting info of the person who created the File
 
-                            string deptfilebelongs = wsRow[rowNum, 4].Text;//File Belongs To Particular Department
+                            string deptfilebelongs = WorkSheetRow[RowNumber, 4].Text;//File Belongs To Particular Department
                        
                             int split = filetoupload.LastIndexOf('.');//To Get The Type Of the File
                             string filename = split < 0 ? filetoupload : filetoupload.Substring(0, split);
@@ -137,8 +137,8 @@ namespace AssessmentExcel
                             finally
                             {
                                 FileUploadStatus = String.IsNullOrEmpty(Reason) ? "Uploaded" : "Failed";
-                                range.Cells[rowNum, 5] = FileUploadStatus;
-                                range.Cells[rowNum, 6] = Reason;
+                                range.Cells[RowNumber, 5] = FileUploadStatus;
+                                range.Cells[RowNumber, 6] = Reason;
                             }
 
                         }
