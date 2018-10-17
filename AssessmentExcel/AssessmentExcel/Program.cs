@@ -12,6 +12,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using Microsoft.VisualStudio.Tools.Applications.Runtime;
 using System.Net;
 
+
 namespace AssessmentExcel
 {
     public class Program
@@ -32,16 +33,20 @@ namespace AssessmentExcel
                     Importexcel(clientContext);// method to download the excelfile
                     ReadExcel(clientContext);// method to read the excel file and upload the files to the Documentlibrary and also update the status and reason columns of the excel file which is downloaded
                     UploadExcel(clientContext);// method to upload the excel file which is updated
-                   
+
 
 
 
                 }
 
+            
             }
             catch (Exception ex)
             {
                 ErrorLogFile.Errorlog(ex);
+                Console.WriteLine("Error occured Check LogFile");
+                Console.Read();
+               
             }
         }
         private static void ReadExcel(ClientContext clientContext)
