@@ -56,8 +56,13 @@ namespace AssessmentExcel
 
 
                 PathLocation pathLocation = new PathLocation();
+                List list = clientContext.Web.Lists.GetByTitle(pathLocation.DocumentLibrary);
+                clientContext.Load(list.RootFolder);
+                clientContext.ExecuteQuery();
+                string FileserverUrl = list.RootFolder.ServerRelativeUrl + "/" + pathLocation.ExcelFileName;
 
-                Microsoft.SharePoint.Client.File file = clientContext.Web.GetFileByUrl(pathLocation.ExcelPathLocation);
+
+                Microsoft.SharePoint.Client.File file = clientContext.Web.GetFileByServerRelativeUrl(FileserverUrl);
                 ClientResult<System.IO.Stream> ExcelData = file.OpenBinaryStream();
                 clientContext.Load(file);
                 clientContext.ExecuteQuery();
