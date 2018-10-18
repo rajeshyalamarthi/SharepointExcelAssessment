@@ -9,7 +9,7 @@ namespace AssessmentExcel
     public class PathLocation
     {
         public string SiteUrl = "https://acuvatehyd.sharepoint.com/teams/Info";
-        public string ExcelPathLocation = "https://acuvatehyd.sharepoint.com/:x:/t/Info/EfTYpGcAMH9Gmho9Cna6Vv0BiH0AJ1VOurNrepDBVGDiFg?e=Sx9jjc";
+        public string DocumentLibrary = "ExcelUploadDocument";
         public string ExcelFileName= "DataUploadforProject.xlsx";
         public string ExcelFilePath = @"G:/";
         public string LocalExcelfile= @"G:/DataUploadforProject.xlsx";
